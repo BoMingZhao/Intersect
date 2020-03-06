@@ -49,10 +49,15 @@ void caculate_line_line(Line l1,Line l2) {//caculate the crosspoint of the two l
         return;
     }
     else {
-        point.x = (l2.b - l1.b) / (l1.a-l2.a);
-        point.y = point.x * l1.a + l1.b;
-        pointmap.insert(pair<crosspoint, int>(point, 1));
-        return;
+        if (l1.a == l2.a) {
+            return;
+        }
+        else {
+            point.x = (l2.b - l1.b) / (l1.a - l2.a);
+            point.y = point.x * l1.a + l1.b;
+            pointmap.insert(pair<crosspoint, int>(point, 1));
+            return;
+        }
     }
 }
 
@@ -62,9 +67,9 @@ void caculate_line_circle(Line l, Circle c) {//caculate the crosspoint of the on
     if (l.aNotExist) {
         point1.x = l.t;
         point2.x = l.t;
-        int k = (l.t - c.m) * (l.t - c.m);
-        int r2 = c.r * c.r;
-        int left = r2 - k;
+        double k = ((double)l.t - c.m) * ((double)l.t - c.m);
+        double r2 = (double)c.r * c.r;
+        double left = r2 - k;
         if (left < 0) {//no result
             return;
         }
@@ -104,7 +109,56 @@ void caculate_line_circle(Line l, Circle c) {//caculate the crosspoint of the on
 }
 
 void caculate_circle_circle(Circle c1, Circle c2) {//caculate the crosspoint of the two circles
-
+    crosspoint point1;
+    crosspoint point2;
+    if (c2.n == c1.n && c2.m == c1.m) {
+        return;
+    }
+    else if (c2.n == c1.n) {
+        double temp = ((double)c2.m * c2.m - (double)c1.m * c1.m + (double)c2.n * c2.n - (double)c1.n * c1.n + (double)c1.r * c1.r - (double)c2.r * c2.r)
+            / ((double)2 * ((double)c2.m - c1.m));
+        point1.x = temp;
+        point2.x = temp;
+        double left = (double)c1.r * c1.r - (temp - c1.m) * (temp - c1.m);
+        if (left > 0) {
+            point1.y = sqrt(left) + c1.n;
+            point2.y = c1.n - sqrt(left);
+            pointmap.insert(pair<crosspoint, int>(point1, 1));
+            pointmap.insert(pair<crosspoint, int>(point2, 1));
+        }
+        else if (left == 0) {
+            point1.y = c1.n;
+            pointmap.insert(pair<crosspoint, int>(point1, 1));
+        }
+        else {
+            return;
+        }
+    }
+    else {
+        double k = ((double)c1.m - c2.m) / ((double)c2.n - c1.n);
+        double temp = ((double)c2.m * c2.m - (double)c1.m * c1.m + (double)c2.n * c2.n - (double)c1.n * c1.n + (double)c1.r * c1.r - (double)c2.r * c2.r)
+            / ((double)2 * ((double)c2.n - c1.n));
+        double a = 1 + k * k;
+        double b = 2 * (k * temp - c1.n * k - c1.m);
+        double c = (double)c1.m * c1.m + (double)c1.n * c1.n - (double)c1.r * c1.r + temp * temp - 2 * temp * c1.n;
+        double deta = b * b - 4 * a * c;
+        if (deta > 0) {
+            point1.x = (sqrt(deta) - b) / (2 * a);
+            point2.x = (-1 * sqrt(deta) - b) / (2 * a);
+            point1.y = point1.x * k + temp;
+            point2.y = point2.x * k + temp;
+            pointmap.insert(pair<crosspoint, int>(point1, 1));
+            pointmap.insert(pair<crosspoint, int>(point2, 1));
+        }
+        else if (deta == 0) {
+            point1.x = (b == 0) ? 0 : -1 * b / (2 * a);
+            point1.y = point1.x * k + temp;
+            pointmap.insert(pair<crosspoint, int>(point1, 1));
+        }
+        else {
+            return;
+        }
+    }
 }
 
 int main()
@@ -117,13 +171,13 @@ int main()
     for (int i = 1; i <= n; i++) {
         cin >> type;
         if (type == 'L') { 
-            scanf_s("%d%d%d%d",&x1,&y1,&x2,&y2);
-            Line l(x1,y1,x2,y2);
+            scanf_s("%d%d%d%d", &x1, &y1, &x2, &y2);
+            Line l(x1, y1, x2, y2);
             lineset.push_back(l);
         }
         else if (type == 'C') {
             scanf_s("%d%d%d", &x, &y, &r);
-            Circle c(x,y,r);
+            Circle c(x, y, r);
             circleset.push_back(c);
         }
         else {
@@ -136,8 +190,6 @@ int main()
             for (unsigned int j = i + 1; j <= lineset.size(); j++) {
                 Line l1 = lineset[i - 1];
                 Line l2 = lineset[j - 1];
-                //cout << "l1:y=" << l1.a << "x+" << l1.b << endl;
-                //cout << "l2:y=" << l2.a << "x+" << l2.b << endl;
                 caculate_line_line(l1, l2);
             }
         }
@@ -148,10 +200,11 @@ int main()
                 caculate_line_circle(l, c);
             }
         }
+
         for (unsigned int i = 1; i < circleset.size(); i++) {
             for (unsigned int j = i + 1; j <= circleset.size(); j++) {
                 Circle c1 = circleset[i - 1];
-                Circle c2 = circleset[i - 2];
+                Circle c2 = circleset[j - 1];
                 caculate_circle_circle(c1, c2);
             }
         }
