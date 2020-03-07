@@ -1,3 +1,4 @@
+#pragma once
 #include <stack>
 #include <vector>
 #include <iostream>
@@ -13,18 +14,3 @@ public:
 	int t;
 	Line(int x1, int y1, int x2, int y2);
 };
-
-Line::Line(int x1, int y1, int x2, int y2) {
-	if (x1 == x2) {
-		aNotExist = true;
-		t = x1;
-		a = 0;//delete warning
-		b = 0;//delete warning
-	}
-	else {
-		aNotExist = false;
-		a = (y1 - y2) / (x1 - x2);
-		b = y1 - a * x1;
-		t = 0;//delete warning
-	}
-}

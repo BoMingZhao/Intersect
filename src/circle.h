@@ -12,9 +12,3 @@ public:
 	int m, n, r;
 	Circle(int a, int b, int c);
 };
-
-Circle::Circle(int a, int b, int c) {
-	m = a;
-	n = b;
-	r = c;
-}
