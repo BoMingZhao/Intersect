@@ -376,7 +376,7 @@ int main()
         q.pop();
         cout << "(" << p.x << "," << p.y << ")" <<endl;
     }*/
-    if (n >= 1000) {//暴力
+    if (n <= 10000000) {//暴力
         for (unsigned int i = 1; i < lineset.size(); i++) {
             for (unsigned int j = i + 1; j <= lineset.size(); j++) {
                 Line l1 = lineset[i - 1];
