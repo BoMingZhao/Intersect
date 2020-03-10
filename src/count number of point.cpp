@@ -7,6 +7,7 @@
 #include <set>
 #include "count number of point.h"
 const double MAXN = 5000000000;
+#define TEMP ((double)c2.m * c2.m - (double)c1.m * c1.m + (double)c2.n * c2.n - (double)c1.n * c1.n + (double)c1.r * c1.r - (double)c2.r * c2.r) / ((double)2 * ((double)c2.m - c1.m))
 using namespace std;
 
 typedef struct{
@@ -28,12 +29,7 @@ bool operator< (const crosspoint& a, const crosspoint& b) {
 
 struct cmp1 {
     bool operator() (Point a, Point b) {
-        if (a.x == b.x) {
-            return a.y > b.y;
-        }
-        else {
-            return a.x > b.x;
-        }
+        return a.x > b.x;
     }
 };
 
@@ -216,9 +212,9 @@ int Calculate::calculate_circle_circle(Circle c1, Circle c2) {//caculate the cro
     else if (c2.n == c1.n) {
         double temp = ((double)c2.m * c2.m - (double)c1.m * c1.m + (double)c2.n * c2.n - (double)c1.n * c1.n + (double)c1.r * c1.r - (double)c2.r * c2.r)
             / ((double)2 * ((double)c2.m - c1.m));
-        point1.x = temp;
-        point2.x = temp;
-        double left = (double)c1.r * c1.r - (temp - c1.m) * (temp - c1.m);
+        point1.x = TEMP;
+        point2.x = TEMP;
+        double left = (double)c1.r * c1.r - (TEMP - c1.m) * (TEMP - c1.m);
         if (left > 0) {
             point1.y = sqrt(left) + c1.n;
             point2.y = c1.n - sqrt(left);
@@ -340,8 +336,17 @@ void Calculate::calculate_line_line_allinsert(Line l1, Line l2) {
     }
 }
 
-int main()
+int main(int argc, char* argv[])
 {
+    FILE* stream;
+    for (int i = 0; i < argc; i++) {
+        if (argv[i][0] == '-' && argv[i][1] == 'o') {
+            freopen_s(&stream, argv[i + 1], "w", stdout);
+        }
+        if (argv[i][0] == '-' && argv[i][1] == 'i') {
+            freopen_s(&stream, argv[i + 1], "r", stdin);
+        }
+    }
     int n;
     int x1, x2, y1, y2;
     int x, y, r;
@@ -353,12 +358,12 @@ int main()
         if (type == 'L') { 
             scanf_s("%d%d%d%d", &x1, &y1, &x2, &y2);
             Line l(x1, y1, x2, y2);
-            Point pl = calculate.calculate_leftpoint(l);
+            /*Point pl = calculate.calculate_leftpoint(l);
             l.makesort(pl.x, pl.y);
             pl.belong.makesort(pl.x, pl.y);
             Point pr = calculate.calculate_rightpoint(l);
             q.push(pl);
-            q.push(pr);
+            q.push(pr);*/
             lineset.push_back(l);
         }
         else if (type == 'C') {
@@ -465,5 +470,7 @@ int main()
         }
         cout << pointset.size() << endl;
     }
+    fclose(stdin);
+    fclose(stdout);
 }
 
