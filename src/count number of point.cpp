@@ -27,11 +27,11 @@ bool operator< (const crosspoint& a, const crosspoint& b) {
     
 }
 
-struct cmp1 {
+/*struct cmp1 {
     bool operator() (Point a, Point b) {
         return a.x > b.x;
     }
-};
+};*/
 
 struct cmp2 {
     bool operator() (const Line& a, const Line& b) const {
@@ -51,7 +51,7 @@ struct cmp2 {
     }
 };
 
-struct cmp3 {
+/*struct cmp3 {
     bool operator() (const Point& a, const Point& b) const {
         if (a.x == b.x) {
             if (a.y == b.y) {
@@ -68,7 +68,7 @@ struct cmp3 {
             return a.x > b.x;
         }
     }
-};
+};*/
 
 struct cmp4 {
     bool operator() (const crosspoint& a, const crosspoint& b) const {
@@ -93,10 +93,9 @@ typedef std::map<crosspoint, int> Map;
 Map pointmap;
 vector<Line> lineset;
 vector<Circle> circleset;
-vector<Line> linesort;
-priority_queue <Point, vector<Point>, cmp1> q;//顶点的优先队列
-set<Line,cmp2> s;
-set<Point,cmp3> pointset;
+//priority_queue <Point, vector<Point>, cmp1> q;//顶点的优先队列
+//set<Line,cmp2> s;
+//set<Point,cmp3> pointset;
 set<crosspoint, cmp4> Setpoint;
 
 int Calculate::calculate_line_line(Line l1,Line l2) {//caculate the crosspoint of the two lines 
@@ -266,7 +265,7 @@ int Calculate::calculate_circle_circle(Circle c1, Circle c2) {//caculate the cro
     }
 }
 
-Point Calculate::calculate_leftpoint(Line l) {
+/*Point Calculate::calculate_leftpoint(Line l) {
     double x, y;
     if (l.B == 0) {
         x = -l.C / l.A;
@@ -314,9 +313,9 @@ Point Calculate::calculate_rightpoint(Line l) {
     }
     Point p(x, y, 2, l);
     return p;
-}
+}*/
 
-void Calculate::calculate_line_line_allinsert(Line l1, Line l2) {
+/*void Calculate::calculate_line_line_allinsert(Line l1, Line l2) {
     //caculate the crosspoint of the two lines and insert the Intersect into the map 
     crosspoint point;
     if (l1.A * l2.B == l1.B * l2.A) {
@@ -334,7 +333,7 @@ void Calculate::calculate_line_line_allinsert(Line l1, Line l2) {
         q.push(p);
         return;
     }
-}
+}*/
 
 int main(int argc, char* argv[])
 {
@@ -413,7 +412,7 @@ int main(int argc, char* argv[])
         }*/
     }
     else {//扫描线
-        while (!q.empty()) {
+        /*while (!q.empty()) {
             Point p = q.top();
             q.pop();
             if (p.type == 1) {//是左端点
@@ -468,7 +467,7 @@ int main(int argc, char* argv[])
                 }
             }
         }
-        cout << pointset.size() << endl;
+        cout << pointset.size() << endl;*/
     }
     fclose(stdin);
     fclose(stdout);
